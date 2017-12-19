@@ -107,7 +107,7 @@ function _csfEvalVariables() {
         local vTmp="${CONFSH_BACKUP_DIR}/$(basename -- "${vFile}").confsh.tmp";
         local vBackupSuffix="$(date +".%Y-%m-%d@%H:%M:%S~")";
         local vBackup="${CONFSH_BACKUP_DIR}/$(basename -- ${vFile})${vBackupSuffix}";
-        [[ -f ${vFile} ]] || touch "${vFile}";
+        [[ -f "${vFile}" ]] || touch "${vFile}";
         \cp -fp "${vFile}" "${vTmp}";
     }'
 }
@@ -175,6 +175,7 @@ function confsh-get-template-ifcfg()
 {
     local vUri="${CONFSH_URI_PREFIX:?}/ROOT/etc/sysconfig/network-scripts/ifcfg-tmp" vFile="/tmp/ifcfg-tmp"
     curl -LRsS --connect-timeout 10 "${vUri}" -o "${vFile}" && ls -l "${vFile}"
+    # 自動でdiff=>上書き確認=>上書きのようなヤツを書く
 }
 function confsh-setup-profile() {
     local vCommand="curl -LRsS ${CONFSH_URI_PREFIX}/ROOT/home/HOME/profile" vFile="${HOME}/.profile"
@@ -215,10 +216,12 @@ function confsh-add-sudoer() {
         return 1
     fi
 }
-function confsh-make-git()
-{
-#    if ! git version > /dev/null 2>&1
-#    then
+function confsh-make-git() {
+    if git version > /dev/null 2>&1
+    then
+        _csfLogInfo "$(which git)"
+        return 0
+    else
         _csfCheckRoot || return 1
         if yum --help > /dev/null 2>&1
         then
@@ -227,7 +230,7 @@ function confsh-make-git()
         elif apt --help > /dev/null 2>&1
         then
             apt update
-            apt -y install gettext libssl-dev libcurl4-openssl-dev libexpat1-dev make || return 1
+            apt -y install gcc gettext libssl-dev libcurl4-openssl-dev libexpat1-dev make || return 1
         else
             _csfLogFatal "${FUNCNAME[0]}: OS not supported."
             return 1
@@ -235,6 +238,7 @@ function confsh-make-git()
         local vGitBaseUri='https://www.kernel.org/pub/software/scm/git/'
         local vUri="${vGitBaseUri}$(curl -LRsS --connect-timeout 10 ${vGitBaseUri} | sed 's/^.*<a href="\(.*\)">.*$/\1/g' | \egrep '^git-[0-9\.]+.tar.gz' | sort -V | tail -n 1)"
         local vFile="/usr/local/src/$(basename -- ${vUri})"
+        local vCommand="curl -LRsS ${vUri}"
         local vGitSourceDir="/usr/local/src/$(basename -- "${vFile}" .tar.gz)"
         _csfLogInfo "GET ${vUri}"
         curl -LR --connect-timeout 10 "${vUri}" -o "${vFile}"
@@ -242,10 +246,22 @@ function confsh-make-git()
         tar -C /usr/local/src -xzf "${vFile}"
         (cd "${vGitSourceDir}"; make prefix=/usr/local all; make prefix=/usr/local install)
         [[ -d "${vGitSourceDir}" ]] && rm -rf "${vGitSourceDir}"
-#    else
-#        _csfLogInfo "$(which git)"
-#        return 0
-#    fi
+    fi
+}
+
+function confsh-setup-github-ssh() {
+    git config remote.origin.url | \grep 'github.com' -q || _csfLogError "Not a github repository."
+    local vCommand="curl -LRsS ${CONFSH_URI_PREFIX:?}/ROOT/home/HOME/ssh/config" vFile="${HOME}/.ssh/config"
+    [[ -d "${HOME}/.ssh" ]] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
+    [[ -d "${HOME}/.ssh" ]] || { _confshLogError "Failed to mkdir \"${HOME}/.ssh\""; return 1; }
+    eval "$(_csfEvalVariables)"
+    eval "$(_csfEvalCurlFile)"
+    chmod 600 "${vTmp}"
+    eval "$(_csfEvalDiffReflect)"
+    git config remote.origin.url | \grep 'https://github.com/' -q && {
+        _csfLogInfo "Prease run commands below:"
+        _csfLogInfo "$ git remote set-url origin git@github.com:$(git config remote.origin.url | sed 's@https://github.com/\([^/]\+\)/\([^/]\+\.git\).*@\1/\2@g')"
+    }
 }
 
 
