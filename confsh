@@ -250,18 +250,26 @@ function confsh-make-git() {
 }
 
 function confsh-setup-github-ssh() {
-    git config remote.origin.url | \grep 'github.com' -q || _csfLogError "Not a github repository."
-    local vCommand="curl -LRsS ${CONFSH_URI_PREFIX:?}/ROOT/home/HOME/ssh/config" vFile="${HOME}/.ssh/config"
-    [[ -d "${HOME}/.ssh" ]] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
-    [[ -d "${HOME}/.ssh" ]] || { _confshLogError "Failed to mkdir \"${HOME}/.ssh\""; return 1; }
-    eval "$(_csfEvalVariables)"
-    eval "$(_csfEvalCurlFile)"
-    chmod 600 "${vTmp}"
-    eval "$(_csfEvalDiffReflect)"
-    git config remote.origin.url | \grep 'https://github.com/' -q && {
-        _csfLogInfo "Prease run commands below:"
-        _csfLogInfo "$ git remote set-url origin git@github.com:$(git config remote.origin.url | sed 's@https://github.com/\([^/]\+\)/\([^/]\+\.git\).*@\1/\2@g')"
-    }
+    if git config remote.origin.url | \grep 'github.com' -q
+    then
+        local vCommand="curl -LRsS ${CONFSH_URI_PREFIX:?}/ROOT/home/HOME/ssh/config" vFile="${HOME}/.ssh/config"
+        [[ -d "${HOME}/.ssh" ]] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
+        [[ -d "${HOME}/.ssh" ]] || { _confshLogError "Failed to mkdir \"${HOME}/.ssh\""; return 1; }
+        eval "$(_csfEvalVariables)"
+        eval "$(_csfEvalCurlFile)"
+        chmod 600 "${vTmp}"
+        eval "$(_csfEvalDiffReflect)"
+        if git config remote.origin.url | \grep 'https://github.com/' -q
+        then
+            _csfLogInfo "Prease run commands below:"
+            _csfLogInfo "$ git remote set-url origin git@github.com:$(git config remote.origin.url | sed 's@https://github.com/\([^/]\+\)/\([^/]\+\.git\).*@\1/\2@g')"
+        else
+            git config remote.origin.url
+        fi
+    else
+        _csfLogWarn "Not a github repository."
+        return 0
+    fi
 }
 
 
