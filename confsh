@@ -163,7 +163,7 @@ function _csfCheckOS() { _csfCheckCentOS || _csfCheckUbuntu; }
 ### function confsh-* ###
 function confsh-get-list() { declare -f | egrep '^confsh|^_csf' | sed 's/ ()//g'; }
 function confsh-get-usage-memory() { awk 'BEGIN{i=0;j=0;k=0;l=0}; /^MemTotal:/{i=$2}; /^MemFree:/{j=$2}; /^Active\(file\):/{k=$2}; /^Inactive\(file\):/{l=$2}; END{print (i-j-k-l)*100/i}' /proc/meminfo; }
-function confsh-get-used-ip() { [[ ${1} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo ${1}.{1..254} | xargs -P254 -n1 ping -s1 -c1 -W1 | grep ttl | sort -V | sed 's/[^ ]* byte[^ ]* from //g; s/: icmp_seq=[01]\+//g; s/\(=6[34]\)/\1 (Linux)/g; s/\(=12[78]\)/\1 (Windows)/g; s/\(=25[56]\)/\1 (Unix)/g;' || { echo "Usage: ${FUNCNAME[0]} 192.168.100"; return 1; }; }
+function confsh-get-used-ip() { [[ ${1} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo ${1}.{1..254} | xargs -P254 -n1 ping -s1 -c1 -W1 | grep ttl | sort -V | sed 's/[^ ]* byte[^ ]* from //g; s/: icmp_seq=[01]\+//g; s/\(=6[34]\)/\1 (Linux)/g; s/\(=12[78]\)/\1 (Windows)/g; s/\(=25[45]\)/\1 (Unix)/g;' || { echo "Usage: ${FUNCNAME[0]} 192.168.100"; return 1; }; }
 function confsh-genpasswd() { echo "$(cat /dev/urandom | tr -dc '[:alnum:]' | head -c 16)"; }
 function confsh-escape-stdin() { python -c 'import sys,re; print(re.escape(sys.stdin.read()).rstrip())' /dev/stdin | sed 's/\\$//g'; }
 function confsh-remove-comment() {
