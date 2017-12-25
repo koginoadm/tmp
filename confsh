@@ -272,6 +272,19 @@ function confsh-setup-github-ssh() {
     fi
 }
 
+function confsh-install-certbot-auto()
+{
+    _csfCheckRoot || return 1
+    local vUri='https://dl.eff.org/certbot-auto' vFile='/usr/bin/certbot-auto'
+    if [[ ! -x "${vFile}" ]]
+    then
+        curl -LR "${vUri}" -o "${vFile}" && chmod +x $_
+        [[ -x "${vFile}" ]] || { _confshLogError "Failed to install \"certbot-auto\"."; return 1; }
+    fi
+}
+
+
+
 
 
 
