@@ -289,7 +289,7 @@ function confsh-get-cert() {
     if which certbot-auto > /dev/null
     then
         _csfLogInfo "Prease run commands below:"
-        _csfLogInfo "WEBSERVER_FQDN= WEBROOT_PATH= MAILADDR="
+        _csfLogInfo '$ WEBSERVER_FQDN= WEBROOT_PATH= MAILADDR='
         _csfLogInfo '$ certbot-auto certonly -d ${WEBSERVER_FQDN:?} -n --webroot --webroot-path ${WEBROOT_PATH:?} --agree-tos -m ${MAILADDR:?}'
     else
         _csfLogError "\"certbot-auto\" not installed."
