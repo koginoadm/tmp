@@ -275,13 +275,13 @@ function confsh-setup-github-ssh() {
 function confsh-install-certbot-auto() {
     _csfCheckRoot || return 1
     local vUri='https://dl.eff.org/certbot-auto' vFile='/usr/bin/certbot-auto'
-    if [[ -x "${vFile}" ]]
+    if which certbot-auto > /dev/null
     then
-        _csfLogInfo "$(ls -l "${vFile}")"
+        _csfLogInfo "$(ls -l "$(which certbot-auto)")"
     else
         curl -LR "${vUri}" -o "${vFile}" && chmod +x $_
-        _csfLogInfo "$(ls -l "${vFile}")"
-        [[ -x "${vFile}" ]] || { _csfLogError "Failed to install \"certbot-auto\"."; return 1; }
+        _csfLogInfo "$(ls -l "$(which certbot-auto)")"
+        which certbot-auto > /dev/null || { _csfLogError "Failed to install \"certbot-auto\"."; return 1; }
     fi
 }
 
