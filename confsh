@@ -272,8 +272,7 @@ function confsh-setup-github-ssh() {
     fi
 }
 
-function confsh-install-certbot-auto()
-{
+function confsh-install-certbot-auto() {
     _csfCheckRoot || return 1
     local vUri='https://dl.eff.org/certbot-auto' vFile='/usr/bin/certbot-auto'
     if [[ -x "${vFile}" ]]
@@ -285,6 +284,15 @@ function confsh-install-certbot-auto()
         [[ -x "${vFile}" ]] || { _csfLogError "Failed to install \"certbot-auto\"."; return 1; }
     fi
 }
+
+function confsh-get-cert() {
+    _csfLogInfo "$(which certbot-auto)"
+    _csfLogInfo "Prease run commands below:"
+    _csfLogInfo 'WEBSERVER_FQDN= WEBROOT_PATH= MAILADDR='
+    _csfLogInfo '# certbot-auto certonly -d ${WEBSERVER_FQDN:?} -n --webroot --webroot-path ${WEBROOT_PATH:?} --agree-tos -m ${MAILADDR:?}'
+}
+
+
 
 
 
