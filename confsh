@@ -270,16 +270,28 @@ function confsh-setup-github-ssh() {
         return 0
     fi
 }
-function confsh-install-certbot-auto() {
+function confsh-install-jq-linux64() {
     _csfCheckRoot || return 1
-    local vUri='https://dl.eff.org/certbot-auto' vFile='/usr/bin/certbot-auto'
-    if which certbot-auto > /dev/null
+    local vUri="https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" vFile="/usr/bin/jq"
+    if which "$(basename "${vFile}")" > /dev/null
     then
-        _csfLogInfo "$(ls -l "$(which certbot-auto)")"
+        _csfLogInfo "$(ls -l "$(which "$(basename "${vFile}")")")"
     else
         curl -LR "${vUri}" -o "${vFile}" && chmod +x $_
-        _csfLogInfo "$(ls -l "$(which certbot-auto)")"
-        which certbot-auto > /dev/null || { _csfLogError "Failed to install \"certbot-auto\"."; return 1; }
+        _csfLogInfo "$(ls -l "$(which "$(basename "${vFile}")")")"
+        which "$(basename "${vFile}")" > /dev/null || { _csfLogError "Failed to install \"$(basename "${vFile}")\"."; return 1; }
+    fi
+}
+function confsh-install-certbot-auto() {
+    _csfCheckRoot || return 1
+    local vUri="https://dl.eff.org/certbot-auto" vFile="/usr/bin/certbot-auto"
+    if which "$(basename "${vFile}")" > /dev/null
+    then
+        _csfLogInfo "$(ls -l "$(which "$(basename "${vFile}")")")"
+    else
+        curl -LR "${vUri}" -o "${vFile}" && chmod +x $_
+        _csfLogInfo "$(ls -l "$(which "$(basename "${vFile}")")")"
+        which "$(basename "${vFile}")" > /dev/null || { _csfLogError "Failed to install \"$(basename "${vFile}")\"."; return 1; }
     fi
 }
 function confsh-get-cert() {
