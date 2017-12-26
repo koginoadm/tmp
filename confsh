@@ -175,10 +175,10 @@ function confsh-disable-selinux() {
     _csfCheckRoot || return 1
     if _csfCheckCentOS
     then
-        [[ "$(getenforce)" = Enforcing ]] && setenforce 0
+        [[ "$(getenforce)" = "Enforcing" ]] && setenforce 0
         local vFile='/etc/selinux/config'
         eval "$(_csfEvalVariables)"
-        sed -r 's/^([#[:space:]]*)(SELINUX=)([^dp[:space:]][^ie][^sr].*)/'"$(date +\#\ \%Y\%m\%d\ \#)"'\1\2\3\n\2permissive/g' -i "${vTmp}" ### do not remove space from [^d[:space:]]
+        sed -r 's/^([#[:space:]]*)(SELINUX=)([^dp[:space:]][^ie][^sr].*)/'"$(date +\#\ \%Y\%m\%d\ \#)"'\1\2\3\n\2disabled/g' -i "${vTmp}" ### do not remove space from [^d[:space:]]
         eval "$(_csfEvalDiffReflect)"
         return 0
     else
