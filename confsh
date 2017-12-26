@@ -98,8 +98,8 @@ function _csfFuncname() { basename -- ${FUNCNAME[1]}; }
 function _csfLogInfo()   { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]   [$(tput setaf 2)INFO$(tput sgr0)]: "'"$0}'; }
 function _csfLogNotice() { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$] [$(tput setaf 4)NOTICE$(tput sgr0)]: "'"$0}'; }
 function _csfLogWarn()   { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]   [$(tput setaf 3)WARN$(tput sgr0)]: "'"$0}'; }
-function _csfLogError()  { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]  [$(tput setaf 1)ERROR$(tput sgr0)]: "'"$0}'; }
-function _csfLogFatal()  { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]  [$(tput setaf 1)FATAL$(tput sgr0)]: "'"$0}'; exit 1; }
+function _csfLogError()  { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]  [$(tput setaf 1)ERROR$(tput sgr0)]: "'"$0}'; }
+function _csfLogFatal()  { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]  [$(tput setaf 1)FATAL$(tput sgr0)]: "'"$0}'; exit 1; }
 [[ -d ${CONFSH_BACKUP_DIR} ]]  || mkdir -m 700 -p "${CONFSH_BACKUP_DIR}"  || _csfLogFatal "Failed to mkdir \"${CONFSH_BACKUP_DIR}\""
 [[ -d ${CONFSH_SECRETS_DIR} ]] || mkdir -m 700 -p "${CONFSH_SECRETS_DIR}" || _csfLogFatal "Failed to mkdir \"${CONFSH_SECRETS_DIR}\""
 function _csfEvalVariables() {
