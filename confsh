@@ -273,7 +273,7 @@ function confsh-setup-github-ssh() {
 }
 function confsh-install-jq-linux64() {
     _csfCheckRoot || return 1
-    local vUri="https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" vFile="/usr/bin/jq"
+    local vUri="https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" vFile="/usr/local/bin/jq"
     if which "$(basename "${vFile}")" > /dev/null
     then
         _csfLogInfo "$(ls -l "$(which "$(basename "${vFile}")")")"
@@ -285,7 +285,7 @@ function confsh-install-jq-linux64() {
 }
 function confsh-install-certbot-auto() {
     _csfCheckRoot || return 1
-    local vUri="https://dl.eff.org/certbot-auto" vFile="/usr/bin/certbot-auto"
+    local vUri="https://dl.eff.org/certbot-auto" vFile="/usr/local/bin/certbot-auto"
     if which "$(basename "${vFile}")" > /dev/null
     then
         _csfLogInfo "$(ls -l "$(which "$(basename "${vFile}")")")"
