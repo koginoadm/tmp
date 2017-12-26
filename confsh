@@ -95,9 +95,9 @@ function _csfDate() { date +'%Y-%m-%dT%H:%M:%S%z'; }
 function _csfHost() { hostname -s; } #function _csfHost() { uname -n | sed 's/\..*$//g'; }
 function _csfProc() { basename -- "${0}"; }
 function _csfFuncname() { basename -- ${FUNCNAME[1]}; }
-function _csfLogInfo()   { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]   [$(tput setaf 2)INFO$(tput sgr0)]: "'"$0}'; }
-function _csfLogNotice() { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$] [$(tput setaf 4)NOTICE$(tput sgr0)]: "'"$0}'; }
-function _csfLogWarn()   { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]   [$(tput setaf 3)WARN$(tput sgr0)]: "'"$0}'; }
+function _csfLogInfo()   { echo "${1}"   | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]   [$(tput setaf 2)INFO$(tput sgr0)]: "'"$0}'; }
+function _csfLogNotice() { echo "${1}"   | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$] [$(tput setaf 4)NOTICE$(tput sgr0)]: "'"$0}'; }
+function _csfLogWarn()   { echo "${1}"   | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]   [$(tput setaf 3)WARN$(tput sgr0)]: "'"$0}'; }
 function _csfLogError()  { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]  [$(tput setaf 1)ERROR$(tput sgr0)]: "'"$0}'; }
 function _csfLogFatal()  { echo "${1}" | awk '{print "'"$(_csfDate) $(_csfHost) $(_csfProc)[$$]  [$(tput setaf 1)FATAL$(tput sgr0)]: "'"$0}'; exit 1; }
 [[ -d ${CONFSH_BACKUP_DIR} ]]  || mkdir -m 700 -p "${CONFSH_BACKUP_DIR}"  || _csfLogFatal "Failed to mkdir \"${CONFSH_BACKUP_DIR}\""
