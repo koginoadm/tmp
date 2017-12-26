@@ -209,10 +209,11 @@ function confsh-add-sudoer() {
         then
             echo -e "$(date +\#\ \%Y\%m\%d\ \#)""\n${vSudoSetting}" > "${vSudoersdFile}"
             chmod 440 "${vSudoersdFile}"
-            _csfLogInfo "$(ls -l ${vSudoersdFile})"
+            chown root:root "${vSudoersdFile}"
+            _csfLogInfo "$(ls -l "${vSudoersdFile}")"
         fi
     else
-        _csfLogError "${vUsername} not exist."
+        _csfLogError "user(${vUsername}) not exist."
         return 1
     fi
 }
