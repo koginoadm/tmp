@@ -310,7 +310,7 @@ function confsh-install-certbot-auto() {
         which "$(basename "${vFile}")" > /dev/null || { _csfLogError "Failed to install \"$(basename "${vFile}")\"."; return 1; }
     fi
 }
-function confsh-get-cert() {
+function confsh-setup-certbot-auto() {
     if which certbot-auto > /dev/null
     then
         _csfLogInfo "Prease run commands below:"
