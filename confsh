@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ "$(\basename -- "${0}")" != "bash" ]
 then
-    if \which bash > /dev/null
+    if \type -p bash > /dev/null
     then
         if [ "$(\basename -- "${SUDO_COMMAND}")" = "$(\basename -- "${0}")" ]
         then
@@ -235,7 +235,7 @@ function confsh-add-sudoer() {
 function confsh-make-git() {
     if git version > /dev/null 2>&1
     then
-        _csfLogInfo "$(which git)"
+        _csfLogInfo "$(type -p git)"
         return 0
     else
         _csfCheckRoot || return 1
@@ -289,29 +289,29 @@ function confsh-setup-github-ssh() {
 function confsh-install-jq-linux64() {
     _csfCheckRoot || return 1
     local vUri="https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" vFile="/usr/local/bin/jq"
-    if which "$(basename "${vFile}")" > /dev/null
+    if type -p "$(basename "${vFile}")" > /dev/null
     then
-        _csfLogInfo "$(ls -l "$(which "$(basename "${vFile}")")")"
+        _csfLogInfo "$(ls -l "$(type -p "$(basename "${vFile}")")")"
     else
         curl -LR "${vUri}" -o "${vFile}" && chmod +x $_
-        _csfLogInfo "$(ls -l "$(which "$(basename "${vFile}")")")"
-        which "$(basename "${vFile}")" > /dev/null || { _csfLogError "Failed to install \"$(basename "${vFile}")\"."; return 1; }
+        _csfLogInfo "$(ls -l "$(type -p "$(basename "${vFile}")")")"
+        type -p "$(basename "${vFile}")" > /dev/null || { _csfLogError "Failed to install \"$(basename "${vFile}")\"."; return 1; }
     fi
 }
 function confsh-install-certbot-auto() {
     _csfCheckRoot || return 1
     local vUri="https://dl.eff.org/certbot-auto" vFile="/usr/local/bin/certbot-auto"
-    if which "$(basename "${vFile}")" > /dev/null
+    if type -p "$(basename "${vFile}")" > /dev/null
     then
-        _csfLogInfo "$(ls -l "$(which "$(basename "${vFile}")")")"
+        _csfLogInfo "$(ls -l "$(type -p "$(basename "${vFile}")")")"
     else
         curl -LR "${vUri}" -o "${vFile}" && chmod +x $_
-        _csfLogInfo "$(ls -l "$(which "$(basename "${vFile}")")")"
-        which "$(basename "${vFile}")" > /dev/null || { _csfLogError "Failed to install \"$(basename "${vFile}")\"."; return 1; }
+        _csfLogInfo "$(ls -l "$(type -p "$(basename "${vFile}")")")"
+        type -p "$(basename "${vFile}")" > /dev/null || { _csfLogError "Failed to install \"$(basename "${vFile}")\"."; return 1; }
     fi
 }
 function confsh-setup-certbot-auto() {
-    if which certbot-auto > /dev/null
+    if type -p certbot-auto > /dev/null
     then
         _csfLogInfo "Prease run commands below:"
         _csfLogInfo '$ WEBSERVER_FQDN= WEBROOT_PATH= MAILADDR='
