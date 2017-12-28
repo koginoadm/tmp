@@ -222,9 +222,9 @@ function confsh-add-sudoer() {
     _csfCheckRoot || return 1
     local vUsername="${1:?'Please set username for sudo.'}"
     local vSudoSetting="${vUsername} ALL=(ALL) NOPASSWD:ALL" vSudoersdFile="/etc/sudoers.d/${vUsername}"
-    if (\egrep -q "^${vUsername}:.+:/[^:]+sh$" /etc/passwd)
+    if egrep -q "^${vUsername}:.+:/[^:]+sh$" /etc/passwd
     then
-        if (! (\egrep -q "^[[:space:]]*${vSudoSetting}" "${vSudoersdFile}"))
+        if ! egrep -q "^[[:space:]]*${vSudoSetting}" "${vSudoersdFile}"
         then
             echo -e "$(date +\#\ \%Y\%m\%d\ \#)""\n${vSudoSetting}" > "${vSudoersdFile}"
             chmod 440 "${vSudoersdFile}"
@@ -256,7 +256,7 @@ function confsh-make-git() {
             return 1
         fi
         local vGitBaseUri='https://www.kernel.org/pub/software/scm/git/'
-        local vUri="${vGitBaseUri}$(curl -LRsS --connect-timeout 10 ${vGitBaseUri} | sed 's/^.*<a href="\(.*\)">.*$/\1/g' | \egrep '^git-[0-9\.]+.tar.gz' | sort -V | tail -n 1)"
+        local vUri="${vGitBaseUri}$(curl -LRsS --connect-timeout 10 ${vGitBaseUri} | sed 's/^.*<a href="\(.*\)">.*$/\1/g' | egrep '^git-[0-9\.]+.tar.gz' | sort -V | tail -n 1)"
         local vFile="/usr/local/src/$(basename -- ${vUri})"
         local vCommand="curl -LRsS ${vUri}"
         local vGitSourceDir="/usr/local/src/$(basename -- "${vFile}" .tar.gz)"
@@ -269,7 +269,7 @@ function confsh-make-git() {
     fi
 }
 function confsh-setup-github-ssh() {
-    if git config remote.origin.url | \grep 'github.com' -q
+    if git config remote.origin.url | grep 'github.com' -q
     then
         local vCommand="curl -LRsS ${CONFSH_URI_PREFIX:?}/ROOT/home/HOME/ssh/config" vFile="${HOME}/.ssh/config"
         [[ -d "${HOME}/.ssh" ]] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
@@ -278,7 +278,7 @@ function confsh-setup-github-ssh() {
         eval "$(_csfEvalCurlFile)"
         chmod 600 "${vTmp}"
         eval "$(_csfEvalDiffReflect)"
-        if git config remote.origin.url | \grep 'https://github.com/' -q
+        if git config remote.origin.url | grep 'https://github.com/' -q
         then
             _csfLogInfo "Prease run commands below:"
             _csfLogInfo "$ git remote set-url origin git@github.com:$(git config remote.origin.url | sed 's@https://github.com/\([^/]\+\)/\([^/]\+\.git\).*@\1/\2@g')"
