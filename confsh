@@ -178,13 +178,17 @@ function confsh-disable-selinux() {
         [[ "$(getenforce)" = "Enforcing" ]] && setenforce 0
         local vFile='/etc/selinux/config'
         eval "$(_csfEvalVariables)"
-        sed -r 's/^([#[:space:]]*)(SELINUX=)([^dp[:space:]][^ie][^sr].*)/'"$(date +\#\ \%Y\%m\%d\ \#)"'\1\2\3\n\2disabled/g' -i "${vTmp}" ### do not remove space from [^d[:space:]]
+        sed 's/^[[:space:]]*\(SELINUX=\)\(enforcing\|permissive\|[:space:]*\)/'"$(date +\#\ \%Y\%m\%d\ \#)"'\1\2\n\1disabled/g' -i "${vTmp}" ### do not remove space from [^d[:space:]]
         eval "$(_csfEvalDiffReflect)"
         return 0
     else
         _csfLogError "${FUNCNAME[0]}: OS not supported."
         return 1
     fi
+}
+function confsh-gen-authorized-keys()
+{
+    ([ -d ~/.ssh ] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f $_{,.pub}) && (test -f ~/.ssh/authorized_keys || touch $_) && chmod 600 ~/.ssh/authorized_keys && ls -l $_
 }
 function confsh-get-template-ifcfg()
 {
