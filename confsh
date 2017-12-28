@@ -113,7 +113,7 @@ function _csfEvalVariables() {
 }
 function _csfEvalCurlFile() {
     echo '{
-        if egrep "^.?# BEGIN CONFSH MANAGED BLOCK" "${vTmp}" -q && egrep "^.?# END CONFSH MANAGED BLOCK" "${vTmp}" -q;
+        if egrep -q "^.?# BEGIN CONFSH MANAGED BLOCK" "${vTmp}" && egrep -q "^.?# END CONFSH MANAGED BLOCK" "${vTmp}";
         then
             ${CONFSH_REPLACE:?} '"'"'
                 s/\n/<><><><LF><><><>/g;
@@ -269,7 +269,7 @@ function confsh-make-git() {
     fi
 }
 function confsh-setup-github-ssh() {
-    if git config remote.origin.url | grep 'github.com' -q
+    if git config remote.origin.url | grep -q 'github.com'
     then
         local vCommand="curl -LRsS ${CONFSH_URI_PREFIX:?}/ROOT/home/HOME/ssh/config" vFile="${HOME}/.ssh/config"
         [[ -d "${HOME}/.ssh" ]] || echo | ssh-keygen -t rsa -N "" -f ~/.ssh/tmp && \rm -f ~/.ssh/tmp{,.pub}
@@ -278,7 +278,7 @@ function confsh-setup-github-ssh() {
         eval "$(_csfEvalCurlFile)"
         chmod 600 "${vTmp}"
         eval "$(_csfEvalDiffReflect)"
-        if git config remote.origin.url | grep 'https://github.com/' -q
+        if git config remote.origin.url | grep -q 'https://github.com/'
         then
             _csfLogInfo "Prease run commands below:"
             _csfLogInfo "$ git remote set-url origin git@github.com:$(git config remote.origin.url | sed 's@https://github.com/\([^/]\+\)/\([^/]\+\.git\).*@\1/\2@g')"
