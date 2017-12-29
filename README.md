@@ -13,6 +13,13 @@ export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 __EOD__
 source $HOME/.profile
 
+go get -u github.com/gogits/gogs
+
+
+
+
+
+
 
 
 ```
