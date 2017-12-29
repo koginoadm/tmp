@@ -1,5 +1,9 @@
 # Install Golang
 ```
+
+apt -y install git
+yum -y install git
+
 declare vUri="https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz"
 
 mkdir -p $HOME/local
