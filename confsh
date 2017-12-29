@@ -193,7 +193,7 @@ function confsh-gen-authorized-keys()
 function confsh-get-template-ifcfg()
 {
     local vUri="${CONFSH_URI_PREFIX:?}/ROOT/etc/sysconfig/network-scripts/ifcfg-tmp" vFile="/tmp/ifcfg-tmp"
-    curl -LRsS --connect-timeout 10 "${vUri}" -o "${vFile}" && ls -l "${vFile}"
+    curl -LRsS --connect-timeout 10 "${vUri}" -o "${vFile}" && ls -l "${vFile}" && vi "${vFile}"
     # 自動でdiff=>上書き確認=>上書きのようなヤツを書く
 }
 function confsh-setup-profile() {
@@ -222,9 +222,9 @@ function confsh-add-sudoer() {
     _csfCheckRoot || return 1
     local vUsername="${1:?'Please set username for sudo.'}"
     local vSudoSetting="${vUsername} ALL=(ALL) NOPASSWD:ALL" vSudoersdFile="/etc/sudoers.d/${vUsername}"
-    if egrep -q "^${vUsername}:.+:/[^:]+sh$" /etc/passwd
+    if egrep -q "^${vUsername}:.+:/[^:]*sh$" /etc/passwd
     then
-        if ! egrep -q "^[[:space:]]*${vSudoSetting}" "${vSudoersdFile}"
+        if ! egrep -q "^[[:space:]]*${vSudoSetting}" "${vSudoersdFile}" 2> /dev/null
         then
             echo -e "$(date +\#\ \%Y\%m\%d\ \#)""\n${vSudoSetting}" > "${vSudoersdFile}"
             chmod 440 "${vSudoersdFile}"
