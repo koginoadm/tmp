@@ -15,7 +15,7 @@ export GOROOT=$HOME/local/go
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 __EOD__
-source $HOME/.profile
+source $HOME/.bash_profile
 
 go get -u github.com/gogits/gogs
 
