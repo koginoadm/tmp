@@ -1,9 +1,9 @@
+# Install Golang
 ```
-vUri="https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz"
+declare vUri="https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz"
 
-mkdir $HOME/local && cd $_ && pwd
-curl -LR ${vUri} -O
-tar -C $HOME/local -xvzf $(basename ${vUri})
+mkdir -p $HOME/local
+curl -LR ${vUri} -o $HOME/local/$(basename ${vUri}) && tar -C $HOME/local -xvzf $_
 
 cat >> $HOME/.profile << '__EOD__'
 # For golang
