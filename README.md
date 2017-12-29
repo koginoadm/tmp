@@ -1,4 +1,12 @@
-# Install Golang
+# MEMO
+
+
+### wget
+```
+wget --mirror --page-requisites --quiet --show-progress --no-parent --convert-links --adjust-extension --execute robots=off http://diveintopython3-ja.rdy.jp/
+```
+
+### Install Golang
 ```
 
 apt -y install git
